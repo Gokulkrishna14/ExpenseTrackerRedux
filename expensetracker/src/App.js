@@ -1,8 +1,15 @@
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
+import LandingPage from './pages/LandingPage/LandingPage';
+import TransactionPage from './pages/TransactionPage/TransactionPage';
 function App() {
   return (
-    <div className="App">
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/tracker" element={<TransactionPage />} />
+      </Routes>
+    </Router>
   );
 }
 
