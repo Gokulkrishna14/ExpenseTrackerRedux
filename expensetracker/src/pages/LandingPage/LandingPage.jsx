@@ -36,6 +36,10 @@ const LandingPage = () => {
         e.preventDefault();
 
         const parsedTotalBudget = parseInt(totalBudget);
+        if(parsedTotalBudget <=0){
+            enqueueSnackbar("Total Budget Cant be 0", { variant: 'error' });
+            return;
+        }
         console.log(parsedTotalBudget);
         const parsedCategories = {
             Food: parseInt(categories.Food),
