@@ -97,12 +97,12 @@ const LandingPage = () => {
         <div className={styles.container}>
             <h1>{isEditable ? "Update Your Budget" : "Expense Tracker"}</h1>
             <form className={styles.formContainer} onSubmit={handleSubmit}>
-                <InputField label="Name" value={name} onChange={(e) => setName(e.target.value)} min />
-                <InputField label="Total Budget" value={totalBudget} onChange={(e) => setTotalBudget(e.target.value)} type="number" min="1" />
-                <InputField label="Food Budget" value={categories.Food} onChange={(e) => setCategories({ ...categories, Food: e.target.value })} type="number" min="0" />
-                <InputField label="Travel Budget" value={categories.Travel} onChange={(e) => setCategories({ ...categories, Travel: e.target.value })} type="number" min="0" />
-                <InputField label="Utilities Budget" value={categories.Utilities} onChange={(e) => setCategories({ ...categories, Utilities: e.target.value })} type="number" min="0" />
-                <InputField label="Other Budget" value={categories.Other} onChange={(e) => setCategories({ ...categories, Other: e.target.value })} type="number" min="0" />
+                <InputField label="Name" value={name} onChange={(e) => setName(e.target.value)} required />
+                <InputField label="Total Budget" value={totalBudget} onChange={(e) => setTotalBudget(e.target.value)} type="number" min="1" required />
+                <InputField label="Food Budget" value={categories.Food} onChange={(e) => setCategories({ ...categories, Food: e.target.value })} type="number" min="0" required />
+                <InputField label="Travel Budget" value={categories.Travel} onChange={(e) => setCategories({ ...categories, Travel: e.target.value })} type="number" min="0" required />
+                <InputField label="Utilities Budget" value={categories.Utilities} onChange={(e) => setCategories({ ...categories, Utilities: e.target.value })} type="number" min="0" required />
+                <InputField label="Other Budget" value={categories.Other} onChange={(e) => setCategories({ ...categories, Other: e.target.value })} type="number" min="0" required />
                 {isEditable ? (
                     <div className={styles.buttonList}>
                         <Button style="secondary" onClick={handleSubmit}>Update Budget</Button>
