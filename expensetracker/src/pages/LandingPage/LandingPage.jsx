@@ -66,18 +66,17 @@ const LandingPage = () => {
         };
 
         if (isEditable) {
-            console.log("Updating budget with data:", budgetData); 
+            enqueueSnackbar("Budget Updates successfully. Navigating to Transaction Page.", { variant: "success" });
             dispatch(updateBudget(budgetData));
         } else {
-            console.log("Setting budget with data:", budgetData);
+            enqueueSnackbar("Budget added successfully. Navigating to Transaction Page.", { variant: "success" });
             dispatch(setBudget(budgetData));
         }
 
         dispatch(stopEditing());
-        enqueueSnackbar("Budget added successfully. Navigating to Transaction Page.", { variant: "success" });
         setTimeout(() => {
             navigate('/transaction');
-        }, 500);
+        }, 400);
     }
 
     const handleNewTracker = () => {
