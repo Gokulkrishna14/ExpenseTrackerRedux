@@ -3,7 +3,7 @@ import Button from "../Button/Button"
 import styles from "./NewExpenseSection.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useSnackbar } from "notistack";
-import { addExpense, updateBudget } from "../../slice";
+import { addExpense } from "../../slice";
 
 const NewExpenseSection = () => {
     const { enqueueSnackbar } = useSnackbar();
@@ -29,20 +29,13 @@ const NewExpenseSection = () => {
         if (newExpense > totalBudget - totalExpenses || newExpense > categoryBudget) {
             const userConfirmed = window.confirm(`Hey your ${category.toLowerCase()} expense is exceeding your current budget. Do you want to proceed?`);
             if (!userConfirmed) {
+                enqueueSnackbar("Ooops!!! Failed to Add expense as you requested ", {variant: "error"});
                 return;
             }
         }
 
-        const totalBuget = categoryBudget - newExpense;
-
         dispatch(addExpense({ name, category, amount: newExpense }));
-        const updatedCategories = {
-            ...budget.categories,
-            [category]: totalBuget
-        };
-
-        dispatch(updateBudget({categories: updatedCategories }));
-
+        enqueueSnackbar("Expense Added", {variant: "success"});
         setName("");
         setCategory("Other");
         setAmount("");
