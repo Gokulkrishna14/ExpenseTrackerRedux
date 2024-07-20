@@ -7,7 +7,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/tracker" element={<TransactionPage />} />
+        <Route path="/transaction" element={<TransactionPage />} />
       </Routes>
     </Router>
   );

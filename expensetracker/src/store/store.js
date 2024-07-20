@@ -1,10 +1,11 @@
-import {budgetReducer, expenseReducer} from "../slice/index";
+import {budgetReducer, editReducer, expenseReducer} from "../slice/index";
 import { configureStore } from '@reduxjs/toolkit';
 
 const store = configureStore({
     reducer : {
-        budgetReducer : budgetReducer ,
-        expenseReducer: expenseReducer ,
+        budget : budgetReducer ,
+        expense: expenseReducer ,
+        edit : editReducer,
     }
 });
 
