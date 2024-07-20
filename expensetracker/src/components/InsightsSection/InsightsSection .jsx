@@ -40,7 +40,6 @@ const InsightsSection = () => {
 
   return (
     <div className={styles.container}>
-            <h2>Insights</h2>
             <table className={styles.table}>
                 <thead>
                     <tr>
