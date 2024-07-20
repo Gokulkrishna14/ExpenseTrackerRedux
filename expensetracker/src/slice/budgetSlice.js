@@ -19,6 +19,9 @@ const budgetSlice = createSlice({
             state.categories = action.payload.categories;
         },
         updateBudget : (state, action) => {
+            if(action.payload.totalBudget){
+                state.totalBudget = action.payload.totalBudget;
+            }
             state.categories = action.payload.categories;
         },
     },

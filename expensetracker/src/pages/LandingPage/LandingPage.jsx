@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import InputField from "../../components/InputField/InputField";
 import styles from "./LandingPage.module.css";
 import { useSnackbar } from "notistack";
@@ -6,11 +6,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { setBudget, updateBudget } from "../../slice";
 import { useNavigate } from "react-router-dom";
 import { stopEditing } from "../../slice";
+import Button from "../../components/Button/Button";
 
 const LandingPage = () => {
     const { enqueueSnackbar } = useSnackbar();
     const [name, setName] = useState('');
-    const [totalBudget, setTotalBudget] = useState(0);
+    const [totalBudget, setTotalBudget] = useState('');
     const [categories, setCategories] = useState({
         Food: '',
         Travel: '',
@@ -18,58 +19,83 @@ const LandingPage = () => {
         Other: '',
     });
     const isEditable = useSelector(state => state.edit.isEditable);
+    const budget = useSelector(state => state.budget);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    useEffect(() => {
+        if (isEditable && budget.name) {
+            setName(budget.name);
+            setTotalBudget(budget.totalBudget);
+            setCategories(budget.categories);
+        }
+    }, [isEditable, budget]);
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        const total = parseInt(totalBudget);
 
-        const categoryTotal = Object.values(categories).reduce((sum, value) => sum + parseInt(value), 0);
+        const parsedTotalBudget = parseInt(totalBudget);
+        console.log(parsedTotalBudget);
+        const parsedCategories = {
+            Food: parseInt(categories.Food),
+            Travel: parseInt(categories.Travel),
+            Utilities: parseInt(categories.Utilities),
+            Other: parseInt(categories.Other),
+        };
+        
+        const categoryTotal = Object.values(parsedCategories).reduce((sum, value) => sum + value, 0);
 
-        if(categoryTotal > total){
-            enqueueSnackbar("Total Categorical budget should not exceed monthly budget", { variant: 'error' });
+        if (categoryTotal > parsedTotalBudget) {
+            enqueueSnackbar("Total categorical budget should not exceed monthly budget", { variant: 'error' });
             return;
         }
 
-        if (categoryTotal < total) {
-            categories.Other = (parseInt(categories.Other) + (total - categoryTotal)).toString();
+        if (categoryTotal < parsedTotalBudget) {
+            parsedCategories.Other += parsedTotalBudget - categoryTotal;
         }
 
-        const budget = {
+        const budgetData = {
             name,
-            totalBudget: total,
-            categories,
+            totalBudget: parsedTotalBudget,
+            categories: parsedCategories,
         };
 
         if (isEditable) {
-            dispatch(updateBudget(budget));
+            console.log("Updating budget with data:", budgetData); 
+            dispatch(updateBudget(budgetData));
         } else {
-            dispatch(setBudget(budget));
+            console.log("Setting budget with data:", budgetData);
+            dispatch(setBudget(budgetData));
         }
-      
+
         dispatch(stopEditing());
-      
-        enqueueSnackbar("Budget Added Successfully , Navigating to Transaction Page", {variant: "success"});
+        enqueueSnackbar("Budget added successfully. Navigating to Transaction Page.", { variant: "success" });
         setTimeout(() => {
             navigate('/transaction');
-        }, 500); 
+        }, 500);
     }
 
     const handleNewTracker = () => {
+        setName('');
+        setTotalBudget('');
+        setCategories({
+            Food: '',
+            Travel: '',
+            Utilities: '',
+            Other: '',
+        });
         dispatch(stopEditing());
         navigate('/');
     };
-    
+
     const handleGoBack = () => {
         navigate('/transaction');
     };
 
-
     return(
         <div className={styles.container}>
-            <h1>{isEditable ? "Update Your Budget" : "Expense Tracker Setup"}</h1>
+            <h1>{isEditable ? "Update Your Budget" : "Expense Tracker"}</h1>
             <form className={styles.formContainer} onSubmit={handleSubmit}>
                 <InputField label="Name" value={name} onChange={(e) => setName(e.target.value)} min />
                 <InputField label="Total Budget" value={totalBudget} onChange={(e) => setTotalBudget(e.target.value)} type="number" min="1" />
@@ -78,13 +104,15 @@ const LandingPage = () => {
                 <InputField label="Utilities Budget" value={categories.Utilities} onChange={(e) => setCategories({ ...categories, Utilities: e.target.value })} type="number" min="0" />
                 <InputField label="Other Budget" value={categories.Other} onChange={(e) => setCategories({ ...categories, Other: e.target.value })} type="number" min="0" />
                 {isEditable ? (
-                    <div>
-                        <button onClick={handleSubmit}>Update Budget</button>
-                        <button onClick={handleNewTracker}>New Tracker</button>
-                        <button onClick={handleGoBack}>Go Back</button>
+                    <div className={styles.buttonList}>
+                        <Button style="secondary" onClick={handleSubmit}>Update Budget</Button>
+                        <Button style="secondary" onClick={handleNewTracker}>New Tracker</Button>
+                        <Button style="secondary" onClick={handleGoBack}>Go Back</Button>
                     </div>
                 ) : (
-                    <button type="submit">Submit</button>
+                    <div className={styles.buttonList}>
+                        <Button style="primary" type="submit">Submit</Button>
+                    </div>
                 )}
             </form>
         </div>

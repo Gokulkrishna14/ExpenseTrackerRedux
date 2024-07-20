@@ -1,0 +1,17 @@
+.pill {
+    padding: 5px 10px;
+    border-radius: 15px;
+    display: inline-block;
+    text-align: center;
+  }
+  
+  .within {
+    background-color: green;
+    color: white;
+  }
+  
+  .exceeded {
+    background-color: red;
+    color: white;
+  }
+  
